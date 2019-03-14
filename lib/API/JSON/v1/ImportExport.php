@@ -2,8 +2,11 @@
 
 namespace MailPoet\API\JSON\v1;
 
+use Carbon\Carbon;
 use MailPoet\API\JSON\Endpoint as APIEndpoint;
 use MailPoet\Config\AccessControl;
+use MailPoet\Cron\Workers\WooCommerceSync;
+use MailPoet\Models\ScheduledTask;
 use MailPoet\Models\Segment;
 use MailPoet\Subscribers\ImportExport\Import\MailChimp;
 
@@ -72,6 +75,26 @@ class ImportExport extends APIEndpoint {
       );
       $process = $export->process();
       return $this->successResponse($process);
+    } catch (\Exception $e) {
+      return $this->errorResponse(array(
+        $e->getCode() => $e->getMessage()
+      ));
+    }
+  }
+
+  function setupWooCommerceInitialImport($data) {
+    try {
+
+
+      $task = ScheduledTask::where('type', WooCommerceSync::TASK_TYPE)->findOne();
+      if (!$task) {
+        $task = ScheduledTask::create();
+        $task->type = WooCommerceSync::TASK_TYPE;
+        $task->status = ScheduledTask::STATUS_SCHEDULED;
+        $task->scheduled_at = Carbon::createFromTimestamp(current_time('timestamp'));
+        $task->save();
+      }
+      return $this->successResponse();
     } catch (\Exception $e) {
       return $this->errorResponse(array(
         $e->getCode() => $e->getMessage()

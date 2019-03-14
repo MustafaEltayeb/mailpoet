@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import MailPoet from 'mailpoet';
 import WelcomeWizardHeader from './header.jsx';
@@ -12,6 +11,8 @@ class WooCommerceImportController extends React.Component {
       loading: false,
     };
     this.updateSettings = this.updateSettings.bind(this);
+    this.finishWizard = this.finishWizard.bind(this);
+    this.submit = this.submit.bind(this);
   }
 
 
@@ -38,6 +39,10 @@ class WooCommerceImportController extends React.Component {
     });
   }
 
+  submit() {
+    this.finishWizard();
+  }
+
   render() {
     return (
       <div className="mailpoet_welcome_wizard_steps mailpoet_welcome_wizard_centered_column">
@@ -46,7 +51,7 @@ class WooCommerceImportController extends React.Component {
           steps_count={0}
           logo_src={window.mailpoet_logo_url}
         />
-        <WooCommerceImportListStep loading={this.state.loading} />
+        <WooCommerceImportListStep loading={this.state.loading} submitForm={this.submit} />
       </div>
     );
   }
