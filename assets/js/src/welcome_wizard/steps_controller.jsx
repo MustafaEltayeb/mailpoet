@@ -111,6 +111,8 @@ class WelcomeWizardStepsController extends React.Component {
               loading={this.state.loading}
               sender={this.state.sender}
               reply_to={this.state.replyTo}
+              pluginInstalledAt={window.mailpoet_installed_at}
+              mssActive={window.mailpoet_mss_active}
             />
           ) : null
         }
