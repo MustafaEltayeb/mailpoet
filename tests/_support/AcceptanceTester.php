@@ -196,4 +196,13 @@ class AcceptanceTester extends \Codeception\Actor {
     return (int)getenv('WAIT_TIMEOUT') ?: $timeout;
   }
 
+  public function activateWooCommerce() {
+    $I = $this;
+    $I->cli('plugin activate woocommerce --allow-root');
+  }
+  public function deactivateWooCommerce() {
+    $I = $this;
+    $I->cli('plugin deactivate woocommerce --allow-root');
+  }
+
 }
